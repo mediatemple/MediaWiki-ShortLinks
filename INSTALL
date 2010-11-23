@@ -1,0 +1,54 @@
+Installing ShortLinks:
+
+This installation guide assumes you are using mod_rewrite with Apache.
+If you are not, and you're using something else like nginx, well then 
+I trust in your ability to make the redirection work without further
+instruction. :)
+
+Step 0:
+	Download latest version of this script, you seem to have already done 
+	that, considering you are reading this file. ;)
+
+Step 1:
+	Upload shortlinks.php to the extensions directory of your MediaWiki 
+	installation.
+
+Step 2:
+	Open up your favorite editor at edit the LocalSettings.php file in
+	the document root, and append the following:
+
+	require_once("$IP/extensions/shortlinks.php");
+
+	If you uploaded this entire directory, then use the following:
+
+	require_once("$IP/extensions/MediaWiki-ShortLinks/shortlinks.php");
+
+Step 3:
+	In the document root, open up the .htaccess file, and append the following rule:
+	
+	RewriteRule ^a/[0-9]+/?$	index.php?action=viewShortLink [NC,L]
+
+Step 4:
+	In your favorite browser, proceed to the following:
+
+	http://your_domain.com/path/to/media/wiki/index.php?action=installShortLinks
+
+	Replacing your_domain.com with the appropriate domain, and the 
+	path/to/media/wiki/ with the appropriate path to the index.php file.
+
+	On this page you will see a list of articles that are being added to the
+	newly created shortlinks table. At the bottom will be a count of how many
+	pages were added.
+
+	Please be patient, this process may take a while, depending on how many
+	articles you have installed!
+
+Step 5:
+	???
+
+Step 6:
+	Profit!
+
+After following these steps, adding a <shortlink/> tag to any page will display
+it's short link (if it is available). Image files by default do not generate a
+short link.

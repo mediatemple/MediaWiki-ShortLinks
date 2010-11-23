@@ -3,38 +3,8 @@
  * MediaWiki ShortLinks
  * Author: Julian Naydichev <jnaydichev@mediatemple.net>
  * 
- * See README for most up-to-date version of the following:
- *
- * Description: 
- *	Allows you to have links like http://wiki.mediatemple.net/a/134 
- *	which redirects the user to
- *	http://wiki.mediatemple.net/w/Serving_websites_with_Nginx_on_Ubuntu_9.10
- *
- *	It will capture new articles upon their creation as well, and create 
- *	their repsective link.
- * 
- * Installation:
- * 	Include this file in your LocalSettings.php, and then visit:
- *	http://your_domain.com/path/to/wiki/index.php?action=installShortLinks
- * 	This creates the databse structure and adds the current articles.
- *	In an article, use <shortlink/> to display that articles link.
- *	There must also be a rewrite rule like the following:
- * 	RewriteRule ^a/[0-9]+/?$	index.php?action=viewShortLink [NC,L]
- *
- * Use:
- *	Once "installed" start adding <shortlink/> tags to your pages,
- *	and sharing those links.
- *
- * Note:
- *	File attachments, or anything that matches the regular expression
- *	\.[a-zA-Z]{3,4}$
- *	Will be excluded from link creation. This is by design.
- *
- * TODO:
- * 	- Add API code to return the shortlink along with requests.
- *	- Rewrite some of the code to work on more setups ($wgArticlePath)
- *	- Take requests from other people and implement them.
- **/
+ * Please see README file for more information on using this extension.
+ */
 
 $wgHooks['ArticleSave'][] = 'addToShortlinks';
 
