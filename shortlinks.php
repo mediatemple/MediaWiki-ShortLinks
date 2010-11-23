@@ -11,7 +11,7 @@ $wgHooks['ArticleSave'][] = 'addToShortlinks';
 function addToShortlinks( &$article, &$user, &$text, &$summary, 
 	$minor, &$watchthis, $sectionanchor, &$flags, &$status ) {
 
-	$title = $article->getTitle();
+	$title = $article->getTitle()->getDBkey();
 
 	/* don't shortlink files */
 	if (preg_match("/\.(gif|jpe?g|png|PNG)$/", $title, $matches) > 0) {
@@ -26,7 +26,7 @@ function addToShortlinks( &$article, &$user, &$text, &$summary,
 		return true;
 
 	/* does the link exist? skip if yes, add if no. */
-	$id = $db->selectField('shortlinks', 'id', array('title' => $title->getDBkey()));
+	$id = $db->selectField('shortlinks', 'id', array('title' => $title));
 	
 	if (!($id > 0))
 		$db->insert('shortlinks', array( 'title' => $title ) );
@@ -46,8 +46,8 @@ function displayShortLink( $input, $args, $parser, $frame = '' ) {
 	$title = $parser->getTitle()->getDBkey();
 
 	/* no shortlinks for files */
-	if (preg_match("/\.[a-zA-Z]{3,4}$/", $title, $matches) > 0) {
-		return true;
+	if (preg_match("/\.(gif|jpe?g|png|PNG)$/", $title, $matches) > 0) {
+		return htmlspecialchars("No short link for this page, sorry.");
 	}
 	
 	/* connect to database*/
