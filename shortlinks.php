@@ -44,7 +44,7 @@ function addToShortlinks( &$article, &$user, &$text, &$summary,
 	$title = $article->getTitle();
 
 	/* don't shortlink files */
-	if (preg_match("/\.[a-zA-Z]{3,4}$/", $title, $matches) > 0) {
+	if (preg_match("/\.(gif|jpe?g|png|PNG)$/", $title, $matches) > 0) {
 		return true;
 	}
 
@@ -99,17 +99,25 @@ function displayShortLink( $input, $args, $parser, $frame = '' ) {
 $wgHooks['UnknownAction'][] = 'installShortLinks';
 
 function installShortLinks( $action, $article = '' ) {
+	global $wgOut;
+
 	/* only install if we're being called */
 	if ($action != 'installShortLinks') 
 		return true;
 
+	$wgOut->setPageTitle('Installing ShortLinks');
 	$db = &wfGetDB(DB_MASTER);
 
 	/* are we installed already? */
-	if ($db->tableExists('shortlinks'))
-		return true;
+	$wgOut->addWikiText('Checking if we\'re already installed...');
+
+	if ($db->tableExists('shortlinks')) {
+		$wgOut->addWikiText('Already installed, exiting.');
+		return false;
+	}
 
 	/* not installed, create table */
+	$wgOut->addWikiText('Creating table...');
 	$table = $db->tableName('shortlinks');
 
 	$create_table = "CREATE  TABLE $table (`id` int(11) NOT NULL auto_increment, "
@@ -117,10 +125,10 @@ function installShortLinks( $action, $article = '' ) {
   			. "UNIQUE KEY `title` (`title`) )";
 
 	$db->safeQuery($create_table);
-
+	
 	/* populate the table */
-	$res = $db->select('page', array('page_title'), 
-		'page_title NOT REGEXP "\.[a-zA-Z]{3,4}$"');
+	$res = $db->select('page', array('distinct page_title'), 
+		'page_title NOT REGEXP "\.(gif|jpe?g|png|PNG)$" and page_is_redirect = 0');
 
 	$count = 0;
 
@@ -131,13 +139,16 @@ function installShortLinks( $action, $article = '' ) {
 		
 		if ($n == '') {
 			$db->insert('shortlinks', array( 'title' => $title->page_title ) );
+			$wgOut->addWikiText('Added article: ' . $title->page_title);
 			$count++;
+		} else {
+			$wgOut->addWikiText('Skipping: ' . $title->page_title);
 		}
 	}
 	
-	echo "<!-- $count rows added to $table -->\n";
-		
-	return true;
+	$wgOut->addWikiText('Added ' . $count . ' articles.');
+	
+	return false;
 }
 
 
