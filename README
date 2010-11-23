@@ -1,5 +1,6 @@
 MediaWiki ShortLinks
 Author: Julian Naydichev <jnaydichev@mediatemple.net>
+License: MIT License, see LICENSE file for details.
 
 Description: 
 	Allows you to have links like http://wiki.mediatemple.net/a/134 
